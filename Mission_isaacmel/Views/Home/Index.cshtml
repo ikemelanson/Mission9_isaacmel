@@ -3,3 +3,21 @@
 *@
 @{
 }
+
+@model List<Book>
+
+@foreach (Book b in Model)
+            {
+                <h3>@b.Title</h3>
+
+                <ul>
+                    <li>By: @b.Author</li>
+                    <li>Publisher: @b.Publisher</li>
+                    <li>ISBN: @b.Isbn</li>
+                    <li>@b.Classification/@b.Category</li>
+                    <li>Pages: @b.PageCount</li>
+                    <li>$@b.Price</li>
+
+                </ul>
+                <br />
+            }
