@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mission_isaacmel.Models;
+using Mission_isaacmel.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,28 @@ namespace Mission_isaacmel.Controllers
         {
             repo = temp;
         }
-        public IActionResult Index()
+        public IActionResult Index(int pageNum = 1)
         {
-            var blah = repo.Books.ToList();
+            //initialize the number of book to be show on one page
+            int pageSize = 10;
 
-            return View(blah);
+            //make new book view model
+            var x = new BooksVIewModel
+            {
+                Books = repo.Books
+                .OrderBy(p => p.Title)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize),
+
+                PageInfo = new PageInfo
+                {
+                    TotalNumBooks = repo.Books.Count(),
+                    BooksPerPage = pageSize,
+                    CurrentPage = pageNum
+                }
+            };
+
+            return View(x);
         }
     }
 }
