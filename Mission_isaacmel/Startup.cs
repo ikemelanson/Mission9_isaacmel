@@ -34,6 +34,11 @@ namespace Mission_isaacmel
             });
 
             services.AddScoped<IMission_isaacmelRepository, EFMission_isaacmelRepository>();
+
+            services.AddRazorPages();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +50,7 @@ namespace Mission_isaacmel
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -60,7 +65,13 @@ namespace Mission_isaacmel
                 endpoints.MapControllerRoute("category", "{bookCategory}", new { controller = "Home", action = "Index", pageNum = 1 });
 
                 endpoints.MapDefaultControllerRoute();
+
+                endpoints.MapRazorPages();
+
+
             });
+
+
         }
     }
 }
