@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace Mission_isaacmel.Models
         public List<BasketLineItem> Items { get; set; } = new List<BasketLineItem>();
 
         //add an item to the basket
-        public void AddItem (Book book, int qty, double price)
+        public virtual void AddItem (Book book, int qty, double price)
         {
             BasketLineItem line = Items
                 .Where(b => b.Book.BookId == book.BookId)
@@ -31,6 +32,19 @@ namespace Mission_isaacmel.Models
             }
         }
 
+        //remove one book from the basket
+        public virtual void RemoveItem(Book book)
+        {
+            Items.RemoveAll(x => x.Book.BookId == book.BookId);
+        }
+
+        //empty the basket
+        public virtual void ClearBasket()
+        {
+            Items.Clear();
+        }
+
+        //calculate the total for the basket
         public double CalcTotal()
         {
             double sum = Items.Sum(x => x.Quantity * x.Price);
@@ -42,6 +56,7 @@ namespace Mission_isaacmel.Models
     public class BasketLineItem
     {
         //all the things we need to calculate basket totals
+        [Key]
         public int LineId { get; set; }
         public Book Book { get; set; }
         public int Quantity { get; set; }

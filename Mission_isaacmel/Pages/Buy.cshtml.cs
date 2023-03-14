@@ -13,19 +13,19 @@ namespace Mission_isaacmel.Pages
     {
         //bring in the repo
         private IMission_isaacmelRepository repo { get; set; }
-
-        public BuyModel (IMission_isaacmelRepository temp)
-        {
-            repo = temp;
-        }
         public Basket basket { get; set; }
         public string ReturnUrl { get; set; }
+
+        public BuyModel (IMission_isaacmelRepository temp, Basket b)
+        {
+            repo = temp;
+            basket = b;
+        }
 
         //when you make a get request for this page
         public void OnGet(string returnUrl)
         {
             ReturnUrl = returnUrl ?? "/";
-            basket = HttpContext.Session.GetJson<Basket>("basket") ?? new Basket();
         }
 
         //when you post to the page
@@ -33,14 +33,16 @@ namespace Mission_isaacmel.Pages
         {
             Book b = repo.Books.FirstOrDefault(x => x.BookId == bookId);
 
-            basket = HttpContext.Session.GetJson<Basket>("basket") ?? new Basket();
-
             basket.AddItem(b, 1, b.Price);
 
-
-            HttpContext.Session.SetJson("basket", basket);
-
             return RedirectToPage(new { ReturnUrl = returnUrl });
+        }
+
+        public IActionResult OnPostRemove(int bookId, string returnUrl)
+        {
+            basket.RemoveItem(basket.Items.First(x => x.Book.BookId == bookId).Book);
+
+            return RedirectToPage(new { ReturnUrl = returnUrl});
         }
     }
 }
